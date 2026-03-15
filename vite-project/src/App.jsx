@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const statusOptions = [
   "Initial Fesiability Report",
@@ -23,194 +23,122 @@ const statusOptions = [
   "Final scheduled",
   "Final Paper Submitted",
   "Case Closed",
-  "Check Due",
+  "Check Due"
 ];
 
-const defaultForm = {
-  dateRcvd: "",
-  lastName: "",
-  firstName: "",
-  address: "",
-  phone: "",
-  firstVisit: "",
-  feasibilityReport: "",
-  contractDate: "",
-  contractor: "",
-  estStart: "",
-  firstInterim: "",
-  secondInterim: "",
-  thirdInterim: "",
-  finalDate: "",
-  statusRemark: "Initial Fesiability Report",
+const statusColors = {
+  "Initial Fesiability Report": "#e0e0e0",
+  "2nd time visit": "#e0e0e0",
+  "Withdrawn": "#999999",
+  "Radon Test Scheduled": "#d0e8ff",
+  "LEAD test scheduled": "#d0e8ff",
+  "Radon&LEAD Scheduled": "#d0e8ff",
+  "Specification Wrieups": "#fff4b3",
+  "Submitted Bid Paperwork": "#fff4b3",
+  "Tier II review": "#fff4b3",
+  "Bidding Process": "#ffd966",
+  "Re Bidding": "#ffd966",
+  "Contract Making": "#fff200",
+  "Contract READY": "#fff200",
+  "Contract Signing Scheduled": "#fff200",
+  "Contract Signing DONE": "#fff200",
+  "WIP": "#f4b183",
+  "WIP-Overdue": "#ff4d4d",
+  "Intrim Inspection#1": "#b6d7a8",
+  "Intrim Inspection#2": "#b6d7a8",
+  "Final scheduled": "#cfe2f3",
+  "Final Paper Submitted": "#cfe2f3",
+  "Case Closed": "#999999",
+  "Check Due": "#f9cb9c"
 };
 
 export default function App() {
+
   const [clients, setClients] = useState(() => {
     const saved = localStorage.getItem("clients");
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [form, setForm] = useState(defaultForm);
-
-  useEffect(() => {
-    localStorage.setItem("clients", JSON.stringify(clients));
-  }, [clients]);
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    address: "",
+    caseDate: "",
+    visitDate: "",
+    reportDate: "",
+    contractDate: "",
+    interimInspection: "",
+    finalInspection: "",
+    status: statusOptions[0]
+  });
 
   function handleChange(e) {
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   }
 
   function addClient() {
+
     const updated = [...clients, form];
+
     setClients(updated);
-    setForm(defaultForm);
+
+    localStorage.setItem("clients", JSON.stringify(updated));
+
+    setForm({
+      name: "",
+      phone: "",
+      address: "",
+      caseDate: "",
+      visitDate: "",
+      reportDate: "",
+      contractDate: "",
+      interimInspection: "",
+      finalInspection: "",
+      status: statusOptions[0]
+    });
   }
 
   return (
-    <div style={{ padding: 20, fontFamily: "Arial" }}>
+    <div style={{ maxWidth: 800, margin: "auto", fontFamily: "Arial" }}>
+
       <h1>Client Project Tracker</h1>
 
-      <h2>Add Client</h2>
+      <h3>Add Client</h3>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "220px 220px",
-          gap: 10,
-          alignItems: "center",
-          maxWidth: 700,
-        }}
-      >
-        <label>Date RCVD</label>
-        <input
-          type="date"
-          name="dateRcvd"
-          value={form.dateRcvd}
-          onChange={handleChange}
-        />
+      <input name="name" placeholder="Client Name" value={form.name} onChange={handleChange} /><br />
+      <input name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} /><br />
+      <input name="address" placeholder="Address" value={form.address} onChange={handleChange} /><br /><br />
 
-        <label>Last Name</label>
-        <input
-          name="lastName"
-          placeholder="Last Name"
-          value={form.lastName}
-          onChange={handleChange}
-        />
+      Case Received Date<br />
+      <input type="date" name="caseDate" value={form.caseDate} onChange={handleChange} /><br />
 
-        <label>First Name</label>
-        <input
-          name="firstName"
-          placeholder="First Name"
-          value={form.firstName}
-          onChange={handleChange}
-        />
+      Visit Date<br />
+      <input type="date" name="visitDate" value={form.visitDate} onChange={handleChange} /><br />
 
-        <label>Address</label>
-        <input
-          name="address"
-          placeholder="Address"
-          value={form.address}
-          onChange={handleChange}
-        />
+      Report Date<br />
+      <input type="date" name="reportDate" value={form.reportDate} onChange={handleChange} /><br />
 
-        <label>Phone</label>
-        <input
-          name="phone"
-          placeholder="Phone"
-          value={form.phone}
-          onChange={handleChange}
-        />
+      Contract Signing<br />
+      <input type="date" name="contractDate" value={form.contractDate} onChange={handleChange} /><br />
 
-        <label>1st Visit</label>
-        <input
-          type="date"
-          name="firstVisit"
-          value={form.firstVisit}
-          onChange={handleChange}
-        />
+      Interim Inspection<br />
+      <input type="date" name="interimInspection" value={form.interimInspection} onChange={handleChange} /><br />
 
-        <label>Feasibility Report</label>
-        <input
-          type="date"
-          name="feasibilityReport"
-          value={form.feasibilityReport}
-          onChange={handleChange}
-        />
+      Final Inspection<br />
+      <input type="date" name="finalInspection" value={form.finalInspection} onChange={handleChange} /><br /><br />
 
-        <label>Contract Date</label>
-        <input
-          type="date"
-          name="contractDate"
-          value={form.contractDate}
-          onChange={handleChange}
-        />
+      Status<br />
+      <select name="status" value={form.status} onChange={handleChange}>
+        {statusOptions.map(option => (
+          <option key={option}>{option}</option>
+        ))}
+      </select>
 
-        <label>Contractor</label>
-        <input
-          name="contractor"
-          placeholder="Contractor"
-          value={form.contractor}
-          onChange={handleChange}
-        />
+      <br /><br />
 
-        <label>Est. Start</label>
-        <input
-          type="date"
-          name="estStart"
-          value={form.estStart}
-          onChange={handleChange}
-        />
-
-        <label>1st Interim</label>
-        <input
-          type="date"
-          name="firstInterim"
-          value={form.firstInterim}
-          onChange={handleChange}
-        />
-
-        <label>2nd Interim</label>
-        <input
-          type="date"
-          name="secondInterim"
-          value={form.secondInterim}
-          onChange={handleChange}
-        />
-
-        <label>3rd Interim</label>
-        <input
-          type="date"
-          name="thirdInterim"
-          value={form.thirdInterim}
-          onChange={handleChange}
-        />
-
-        <label>Final</label>
-        <input
-          type="date"
-          name="finalDate"
-          value={form.finalDate}
-          onChange={handleChange}
-        />
-
-        <label>Status Remark</label>
-        <select
-          name="statusRemark"
-          value={form.statusRemark}
-          onChange={handleChange}
-        >
-          {statusOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <br />
       <button onClick={addClient}>Add Client</button>
 
       <hr />
@@ -218,28 +146,33 @@ export default function App() {
       <h2>Client List</h2>
 
       {clients.map((c, i) => (
+
         <div
           key={i}
-          style={{ border: "1px solid #ccc", padding: 12, marginBottom: 10 }}
+          style={{
+            border: "1px solid #ccc",
+            padding: 12,
+            marginBottom: 10,
+            backgroundColor: statusColors[c.status] || "#ffffff"
+          }}
         >
-          <b>
-            {c.lastName}, {c.firstName}
-          </b>
-          <div><strong>Date RCVD:</strong> {c.dateRcvd}</div>
-          <div><strong>Address:</strong> {c.address}</div>
-          <div><strong>Phone:</strong> {c.phone}</div>
-          <div><strong>1st Visit:</strong> {c.firstVisit}</div>
-          <div><strong>Feasibility Report:</strong> {c.feasibilityReport}</div>
-          <div><strong>Contract Date:</strong> {c.contractDate}</div>
-          <div><strong>Contractor:</strong> {c.contractor}</div>
-          <div><strong>Est. Start:</strong> {c.estStart}</div>
-          <div><strong>1st Interim:</strong> {c.firstInterim}</div>
-          <div><strong>2nd Interim:</strong> {c.secondInterim}</div>
-          <div><strong>3rd Interim:</strong> {c.thirdInterim}</div>
-          <div><strong>Final:</strong> {c.finalDate}</div>
-          <div><strong>Status Remark:</strong> {c.statusRemark}</div>
+
+          <b>{c.name}</b>
+
+          <div>Phone: {c.phone}</div>
+          <div>Address: {c.address}</div>
+          <div>Case Date: {c.caseDate}</div>
+          <div>Visit Date: {c.visitDate}</div>
+          <div>Report Date: {c.reportDate}</div>
+          <div>Contract Date: {c.contractDate}</div>
+          <div>Interim Inspection: {c.interimInspection}</div>
+          <div>Final Inspection: {c.finalInspection}</div>
+          <div>Status: {c.status}</div>
+
         </div>
+
       ))}
+
     </div>
   );
 }
